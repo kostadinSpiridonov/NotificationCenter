@@ -8,6 +8,6 @@ namespace NotificationCenter.Core
     {
         public string Type { get; set; }
 
-        Task Send(IEnumerable<NotificationModel> notifications);
+        Task Send(IEnumerable<NotificationModel> notifications, IEnumerable<string> users);
     }
 }

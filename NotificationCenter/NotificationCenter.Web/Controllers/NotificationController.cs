@@ -3,6 +3,7 @@ using NotificationCenter.DataAccess;
 using NotificationCenter.DataAccess.Repositories;
 using NotificationCenter.Web.Models;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace NotificationCenter.Web.Controllers
@@ -18,7 +19,9 @@ namespace NotificationCenter.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var notifications = await _unitOfWork.NotificationRepository.GetAll();
+            int clientId = int.Parse(User.Claims.Where(c => c.Type == ClaimTypes.Role)
+                   .Select(c => c.Value).SingleOrDefault());
+            var notifications = await _unitOfWork.NotificationRepository.GetByClientId(clientId);
             var mapped = notifications.Select(x => new NotificationModel
             {
                 Name = x.Content

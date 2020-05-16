@@ -13,11 +13,15 @@ CREATE TABLE [dbo].[NotificationChannels](
 	[Name] [nvarchar](max) NOT NULL
 )
 
+CREATE TABLE [dbo].[ClientTypes](
+	[Id] [int] IDENTITY(1,1) NOT NULL PRIMARY KEY,
+	[Name] [nvarchar](max) NOT NULL
+)
+
 CREATE TABLE [dbo].[NotificationEvents](
 	[Id] [int] IDENTITY(1,1) NOT NULL PRIMARY KEY,
 	[Name] [nvarchar](max) NOT NULL,
 	[CriteriaId] [int] NOT NULL FOREIGN KEY REFERENCES [dbo].[NotificationsCriterias](Id),
-	[NotificationGroupId] [int] NOT NULL FOREIGN KEY REFERENCES [dbo].[NotificationsGroups](Id)
 )
 
 CREATE TABLE [dbo].[NotificationEventChannels](
@@ -26,21 +30,24 @@ CREATE TABLE [dbo].[NotificationEventChannels](
 	PRIMARY KEY([NotificationChannelId],[NotificationEventId])
 )
 
-CREATE TABLE [dbo].[Notifications](
-	[Id] [int] IDENTITY(1,1) NOT NULL PRIMARY KEY,
-	[Content] [nvarchar](max) NOT NULL
-)
-
-CREATE TABLE [dbo].[NotificationsGroups](
-	[Id] [int] IDENTITY(1,1) NOT NULL PRIMARY KEY,
-	[Name] [nvarchar](max) NOT NULL
-)
-
 CREATE TABLE [dbo].[Clients](
 	[Id] [int] IDENTITY(1,1) NOT NULL PRIMARY KEY,
 	[Name] [nvarchar](max) NOT NULL,	
-	[Type] [nvarchar](max) NOT NULL
+	[ClientTypeId] [int] NOT NULL FOREIGN KEY REFERENCES [dbo].[ClientTypes](Id),
 )
+
+CREATE TABLE [dbo].[Notifications](
+	[Id] [int] IDENTITY(1,1) NOT NULL PRIMARY KEY,
+	[ClientId] [int] NOT NULL FOREIGN KEY REFERENCES [dbo].[Clients](Id),
+	[Content] [nvarchar](max) NOT NULL
+)
+
+CREATE TABLE [dbo].[NotificationsEventClientTypes](
+	[ClientTypeId] [int] NOT NULL FOREIGN KEY REFERENCES [dbo].[ClientTypes](Id),
+	[NotificationEventId] [int] NOT NULL FOREIGN KEY REFERENCES [dbo].[NotificationEvents](Id),
+	PRIMARY KEY([ClientTypeId],[NotificationEventId])
+)
+
 
 CREATE TABLE [dbo].[Logins](
 	[Id] [int] IDENTITY(1,1) NOT NULL PRIMARY KEY,

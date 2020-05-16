@@ -13,6 +13,8 @@ namespace NotificationCenter.DataAccess
 
         INotificationEventRepository NotificationEventRepository { get; }
 
+        ILoginRepository LoginRepository { get; }
+
         Task Commit();
 
         ValueTask Rollback();

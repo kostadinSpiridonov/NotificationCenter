@@ -8,6 +8,6 @@ namespace NotificationCenter.DataAccess.Repositories
     {
         Task Save(Notification notification);
 
-        Task<IEnumerable<Notification>> GetAll();
+        Task<IEnumerable<Notification>> GetByClientId(int clientId);
     }
 }

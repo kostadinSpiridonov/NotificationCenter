@@ -26,6 +26,7 @@ namespace NotificationCenter.EventGenerator
                 SerialNumber = x.Id,
                 EndDate = x.EndDate,
                 StartDate = x.EndDate,
+                ClientId = x.ClientId
             });
 
         }

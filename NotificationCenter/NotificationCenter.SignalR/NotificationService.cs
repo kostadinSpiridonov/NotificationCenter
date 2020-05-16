@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace NotificationCenter.SignalR
@@ -15,9 +13,9 @@ namespace NotificationCenter.SignalR
             _hub = hub;
         }
 
-        public Task SendNotificationAsync(SignalRNotification message)
+        public Task SendNotificationAsync(SignalRNotification message, IReadOnlyList<string> usernames)
         {
-            return _hub.Clients.All.SendAsync("ReceiveMessage", message.Content);
+            return _hub.Clients.Users(usernames).SendAsync("ReceiveMessage", message.Content);
         }
     }
 }

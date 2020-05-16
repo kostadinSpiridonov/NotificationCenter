@@ -14,16 +14,17 @@ namespace NotificationCenter.DataAccess
 
         public INotificationEventRepository NotificationEventRepository { get; private set; }
 
+        public ILoginRepository LoginRepository { get; private set; }
+
         private readonly NotificationCenterContext _databaseContext;
 
-        public UnitOfWork(
-            NotificationCenterContext databaseContext
-            )
+        public UnitOfWork(NotificationCenterContext databaseContext)
         {
             NotificationRepository = new NotificationRepository(databaseContext);
             CertificateRespoitory = new CertificateRepository(databaseContext);
             RequestRepository = new RequestRepository(databaseContext);
             NotificationEventRepository = new NotificationEventRepository(databaseContext);
+            LoginRepository = new LoginRepository(databaseContext);
 
             _databaseContext = databaseContext;
         }

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using NotificationCenter.DataAccess.Entities;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace NotificationCenter.DataAccess.Repositories
@@ -20,9 +21,9 @@ namespace NotificationCenter.DataAccess.Repositories
             await _context.Notifications.AddAsync(notification);
         }
 
-        public async Task<IEnumerable<Notification>> GetAll()
+        public async Task<IEnumerable<Notification>> GetByClientId(int clientId)
         {
-            return await _context.Notifications.ToListAsync();
+            return await _context.Notifications.Where(x => x.ClientId == clientId).ToListAsync();
         }
     }
 }

@@ -32,14 +32,16 @@ namespace NotificationCenter.Web.Controllers
         {
             string hashed = HashPassword(model.Password);
 
-            if (!await _loginRepository.Exist(model.Username, hashed))
-            {
-                return View();
-            }
-
+            //if (!await _loginRepository.Exist(model.Username, hashed))
+            //{
+            //    return View();
+            //}
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, model.Username),
+                new Claim(ClaimTypes.NameIdentifier, model.Username),
+                new Claim(ClaimTypes.Role, "1")
+
             };
 
             var claimsIdentity = new ClaimsIdentity(

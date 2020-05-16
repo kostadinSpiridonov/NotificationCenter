@@ -4,7 +4,6 @@ using NotificationCenter.Core.Models;
 using NotificationCenter.DataAccess;
 using NotificationCenter.DataAccess.Entities;
 using NotificationCenter.SignalR;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -35,15 +34,17 @@ namespace NotificationCenter.Core
             {
                 var message = new NotificationModel()
                 {
-                    Content = BuildMessage(notificationEvent, eventMessage)
+                    Content = BuildMessage(notificationEvent, eventMessage),
+                    ClientId = eventMessage.ClientId
                 };
 
                 var channels = notificationEvent.NotificationEventChannels.Select(x => x.NotificationChannel.Name).ToList();
-
+                var clientTypes = notificationEvent.NotificationsEventClientTypes.Select(x => x.ClientType.Name);
+                var users = await _unitOfWork.LoginRepository.GetByClientId(eventMessage.ClientId, clientTypes);
                 var tasks = _notificationManagers
                     .Where(x => x.Type == "Database" || channels.Contains(x.Type))
-                    .Select(x => x.Send(new List<NotificationModel> { message }));
-               
+                    .Select(x => x.Send(new List<NotificationModel> { message }, users.Select(x => x.Username)));
+
                 await Task.WhenAll(tasks);
             }
         }

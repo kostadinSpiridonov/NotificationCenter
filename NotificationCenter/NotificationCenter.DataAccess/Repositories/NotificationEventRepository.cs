@@ -21,6 +21,8 @@ namespace NotificationCenter.DataAccess.Repositories
                 .Include(x => x.NotificationEventChannels)
                     .ThenInclude(x => x.NotificationChannel)
                 .Include(x => x.Criteria)
+                .Include(x => x.NotificationsEventClientTypes)
+                    .ThenInclude(x => x.ClientType)
                 .Where(x => x.Criteria.Name == type)
                 .ToListAsync();
         }

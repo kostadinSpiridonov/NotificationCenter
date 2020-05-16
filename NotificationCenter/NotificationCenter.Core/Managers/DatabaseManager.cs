@@ -17,11 +17,11 @@ namespace NotificationCenter.Core.Managers
             _unitOfWork = unitOfWork;
         }
 
-        public async Task Send(IEnumerable<NotificationModel> notifications)
+        public async Task Send(IEnumerable<NotificationModel> notifications, IEnumerable<string> users)
         {
             foreach (var notification in notifications)
             {
-                await _unitOfWork.NotificationRepository.Save(new Notification() { Content = notification.Content });
+                await _unitOfWork.NotificationRepository.Save(new Notification() { Content = notification.Content, ClientId = notification.ClientId });
             }
 
             await _unitOfWork.Commit();

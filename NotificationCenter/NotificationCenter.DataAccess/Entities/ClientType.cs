@@ -3,20 +3,18 @@ using System.Collections.Generic;
 
 namespace NotificationCenter.DataAccess.Entities
 {
-    public partial class NotificationEvent
+    public partial class ClientType
     {
-        public NotificationEvent()
+        public ClientType()
         {
-            NotificationEventChannels = new HashSet<NotificationEventChannel>();
+            Clients = new HashSet<Client>();
             NotificationsEventClientTypes = new HashSet<NotificationsEventClientType>();
         }
 
         public int Id { get; set; }
         public string Name { get; set; }
-        public int CriteriaId { get; set; }
 
-        public virtual NotificationsCriteria Criteria { get; set; }
-        public virtual ICollection<NotificationEventChannel> NotificationEventChannels { get; set; }
+        public virtual ICollection<Client> Clients { get; set; }
         public virtual ICollection<NotificationsEventClientType> NotificationsEventClientTypes { get; set; }
     }
 }
