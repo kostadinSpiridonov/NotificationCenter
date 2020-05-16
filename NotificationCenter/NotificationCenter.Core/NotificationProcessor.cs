@@ -4,6 +4,7 @@ using NotificationCenter.Core.Models;
 using NotificationCenter.DataAccess;
 using NotificationCenter.DataAccess.Entities;
 using NotificationCenter.SignalR;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -28,7 +29,7 @@ namespace NotificationCenter.Core
         public async Task Process(BaseEvent eventMessage)
         {
             var notificationEvents = await _unitOfWork.NotificationEventRepository.GetAllByType(eventMessage.Type);
-          
+
 
             foreach (var notificationEvent in notificationEvents)
             {
@@ -36,12 +37,15 @@ namespace NotificationCenter.Core
                 {
                     Content = BuildMessage(notificationEvent, eventMessage)
                 };
-            }
 
-            //var tasks = _notificationManagers
-            //    .Select(x => x.Send(notifications));
-            //await _unitOfWork.Commit();
-            //await Task.WhenAll(tasks);
+                var channels = notificationEvent.NotificationEventChannels.Select(x => x.NotificationChannel.Name).ToList();
+
+                var tasks = _notificationManagers
+                    .Where(x => x.Type == "Database" || channels.Contains(x.Type))
+                    .Select(x => x.Send(new List<NotificationModel> { message }));
+               
+                await Task.WhenAll(tasks);
+            }
         }
 
         private string BuildMessage(NotificationEvent notificationEvent, BaseEvent baseEvent)

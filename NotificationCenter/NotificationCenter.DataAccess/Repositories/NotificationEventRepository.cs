@@ -17,7 +17,12 @@ namespace NotificationCenter.DataAccess.Repositories
 
         public async Task<IEnumerable<NotificationEvent>> GetAllByType(string type)
         {
-            return await _context.NotificationEvents.Include(x => x.Criteria).Where(x => x.Criteria.Name == type).ToListAsync();
+            return await _context.NotificationEvents
+                .Include(x => x.NotificationEventChannels)
+                    .ThenInclude(x => x.NotificationChannel)
+                .Include(x => x.Criteria)
+                .Where(x => x.Criteria.Name == type)
+                .ToListAsync();
         }
     }
 }

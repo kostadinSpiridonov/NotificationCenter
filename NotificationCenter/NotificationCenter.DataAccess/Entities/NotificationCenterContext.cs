@@ -75,8 +75,6 @@ namespace NotificationCenter.DataAccess.Entities
 
             modelBuilder.Entity<NotificationChannel>(entity =>
             {
-                entity.ToTable("NotificationChannel");
-
                 entity.Property(e => e.Name).IsRequired();
             });
 
@@ -99,21 +97,20 @@ namespace NotificationCenter.DataAccess.Entities
 
             modelBuilder.Entity<NotificationEventChannel>(entity =>
             {
-                entity.HasNoKey();
-
-                entity.ToTable("NotificationEventChannel");
+                entity.HasKey(e => new { e.NotificationChannelId, e.NotificationEventId })
+                    .HasName("PK__Notifica__3DE74F34B7499039");
 
                 entity.HasOne(d => d.NotificationChannel)
-                    .WithMany()
+                    .WithMany(p => p.NotificationEventChannels)
                     .HasForeignKey(d => d.NotificationChannelId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Notificat__Notif__70DDC3D8");
+                    .HasConstraintName("FK__Notificat__Notif__02084FDA");
 
                 entity.HasOne(d => d.NotificationEvent)
-                    .WithMany()
+                    .WithMany(p => p.NotificationEventChannels)
                     .HasForeignKey(d => d.NotificationEventId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Notificat__Notif__71D1E811");
+                    .HasConstraintName("FK__Notificat__Notif__02FC7413");
             });
 
             modelBuilder.Entity<NotificationsCriteria>(entity =>

@@ -44,12 +44,19 @@ namespace NotificationCenter.EventGenerator
         {
             var count = Interlocked.Increment(ref executionCount);
 
-            foreach (var generator in _notificationGenerators)
+            try
             {
-                foreach (var message in await generator.Generate())
+                foreach (var generator in _notificationGenerators)
                 {
-                    _notificationEventBroker.OnEventOccured(message);
+                    foreach (var message in await generator.Generate())
+                    {
+                        _notificationEventBroker.OnEventOccured(message);
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                // TODO: Log
             }
         }
 

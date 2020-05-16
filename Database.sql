@@ -8,7 +8,7 @@ CREATE TABLE [dbo].[NotificationsCriterias](
 	[Template] [nvarchar](max) NOT NULL
 )
 
-CREATE TABLE [dbo].[NotificationChannel](
+CREATE TABLE [dbo].[NotificationChannels](
 	[Id] [int] IDENTITY(1,1) NOT NULL PRIMARY KEY,
 	[Name] [nvarchar](max) NOT NULL
 )
@@ -20,9 +20,10 @@ CREATE TABLE [dbo].[NotificationEvents](
 	[NotificationGroupId] [int] NOT NULL FOREIGN KEY REFERENCES [dbo].[NotificationsGroups](Id)
 )
 
-CREATE TABLE [dbo].[NotificationEventChannel](
-	[NotificationChannelId] [int] NOT NULL FOREIGN KEY REFERENCES [dbo].[NotificationChannel](Id),
+CREATE TABLE [dbo].[NotificationEventChannels](
+	[NotificationChannelId] [int] NOT NULL FOREIGN KEY REFERENCES [dbo].[NotificationChannels](Id),
 	[NotificationEventId] [int] NOT NULL FOREIGN KEY REFERENCES [dbo].[NotificationEvents](Id),
+	PRIMARY KEY([NotificationChannelId],[NotificationEventId])
 )
 
 CREATE TABLE [dbo].[Notifications](

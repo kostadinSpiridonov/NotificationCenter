@@ -8,6 +8,8 @@ namespace NotificationCenter.Core.Managers
 {
     public class DatabaseManager : INotificationManager
     {
+        public string Type { get; set; } = "Database";
+
         private readonly IUnitOfWork _unitOfWork;
 
         public DatabaseManager(IUnitOfWork unitOfWork)

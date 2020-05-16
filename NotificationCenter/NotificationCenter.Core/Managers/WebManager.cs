@@ -7,6 +7,7 @@ namespace NotificationCenter.Core.Managers
 {
     public class WebManager : INotificationManager
     {
+        public string Type { get; set; } = "Web";
         private readonly INotificationService _notificationHub;
 
         public WebManager(INotificationService notificationHub)
