@@ -50,7 +50,7 @@ namespace NotificationCenter.EventGenerator
                 {
                     foreach (var message in await generator.Generate())
                     {
-                        _notificationEventBroker.OnEventOccured(message);
+                       // _notificationEventBroker.OnEventOccured(message);
                     }
                 }
             }

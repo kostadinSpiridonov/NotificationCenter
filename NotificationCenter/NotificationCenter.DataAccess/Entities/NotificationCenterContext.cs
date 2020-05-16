@@ -1,18 +1,25 @@
-﻿using System;
+﻿using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
+using NotificationCenter.Core.Events;
+using NotificationCenter.EventBroker;
 
 namespace NotificationCenter.DataAccess.Entities
 {
     public partial class NotificationCenterContext : DbContext
     {
-        public NotificationCenterContext()
+        private readonly IEventBroker _notificationEventBroker;
+
+        public NotificationCenterContext(IEventBroker notificationEventBroker)
         {
+            _notificationEventBroker = notificationEventBroker;
         }
 
-        public NotificationCenterContext(DbContextOptions<NotificationCenterContext> options)
+        public NotificationCenterContext(DbContextOptions<NotificationCenterContext> options, IEventBroker notificationEventBroker)
             : base(options)
         {
+            _notificationEventBroker = notificationEventBroker;
         }
 
         public virtual DbSet<Certificate> Certificates { get; set; }
@@ -36,6 +43,26 @@ namespace NotificationCenter.DataAccess.Entities
             }
         }
 
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            foreach (var dbEntityEntry in ChangeTracker.Entries().Where(x => x.State == EntityState.Modified))
+            {
+                if (dbEntityEntry.Entity is Request r)
+                {
+                    if (dbEntityEntry.CurrentValues[nameof(Request.Status)] != dbEntityEntry.OriginalValues[nameof(Request.Status)])
+                    {
+                        _notificationEventBroker.OnEventOccured(new RequestStatusChangeEvent
+                        {
+                            ClientId = r.ClientId,
+                            RequestStatus = r.Status,
+                            RequestType = r.Type
+                        });
+                    }
+                }
+            }
+
+            return base.SaveChangesAsync(cancellationToken);
+        }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Certificate>(entity =>
