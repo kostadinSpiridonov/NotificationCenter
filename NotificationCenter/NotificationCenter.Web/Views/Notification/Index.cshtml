@@ -1,0 +1,59 @@
+﻿@model IEnumerable<NotificationCenter.Web.Models.NotificationModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Notifications</h1>
+
+<input type="submit" id="simulate" class="btn btn-light" value="Log Out" />
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+        </tr>
+    </thead>
+    <tbody id="notifications">
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts{
+    <script src="~/js/signalr/dist/browser/signalr.js"></script>
+    <script>
+        "use strict";
+
+
+
+        $(document).ready(function () {
+
+            $("#simulate").click(function () {
+                $.ajax({
+                    type: "POST",
+                    url: "Notification/SimulateUpdate"
+                });
+            });
+        });
+        var connection = new signalR.HubConnectionBuilder().withUrl("/notificationhub").build();
+        connection.start().then(function () {
+        }).catch(function (err) {
+            return console.error(err.toString());
+        });
+
+        connection.on("ReceiveMessage", function (message) {
+            $("#notifications").append("<tr><td>" + message + "</td></tr>");
+        });
+
+
+
+    </script>
+}

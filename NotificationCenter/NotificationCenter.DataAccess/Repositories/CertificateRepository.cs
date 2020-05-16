@@ -1,0 +1,28 @@
+﻿using Microsoft.EntityFrameworkCore;
+using NotificationCenter.DataAccess.Entities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace NotificationCenter.DataAccess.Repositories
+{
+    internal class CertificateRepository : ICertificateRepository
+    {
+        private readonly NotificationCenterContext _context;
+
+        public CertificateRepository(NotificationCenterContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<IEnumerable<Certificate>> GetExpiredCertificates()
+        {
+            var today = DateTime.Now.Date;
+
+            return await _context.Certificates
+                .Where(x => x.EndDate.Date == today)
+                .ToListAsync();
+        }
+    }
+}
