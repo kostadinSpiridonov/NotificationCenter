@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using NotificationCenter.DataAccess.ChangeProcessors;
 using NotificationCenter.DataAccess.Entities;
-using NotificationCenter.EventBroker;.
+using NotificationCenter.EventBroker;
 using System;
 using System.Collections.Generic;
 using System.Linq;

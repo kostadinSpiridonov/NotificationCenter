@@ -8,7 +8,7 @@ namespace NotificationCenter.Core.Managers
 {
     public class DatabaseManager : INotificationManager
     {
-        public string Type { get; set; } = "Database";
+        public ChannelType ChannelType { get; } = ChannelType.Database;
 
         private readonly IUnitOfWork _unitOfWork;
 

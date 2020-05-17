@@ -1,11 +1,13 @@
-﻿namespace NotificationCenter.Core.Events
+﻿using NotificationCenter.EventBroker.Events;
+
+namespace NotificationCenter.Core.Events
 {
     public abstract class BaseEvent
     {
-        public string Type { get; private set; }
+        public EventTypes Type { get; private set; }
         public int ClientId { get;  set; }
 
-        public BaseEvent(string type)
+        public BaseEvent(EventTypes type)
         {
             Type = type;
         }

@@ -27,7 +27,7 @@ namespace NotificationCenter.Core
 
         public async Task Process(BaseEvent eventMessage)
         {
-            var notificationEvents = await _unitOfWork.NotificationEventRepository.GetAllByType(eventMessage.Type);
+            var notificationEvents = await _unitOfWork.NotificationEventRepository.GetAllByType((NotificationCrieriaType)eventMessage.Type);
 
 
             foreach (var notificationEvent in notificationEvents)
@@ -38,11 +38,11 @@ namespace NotificationCenter.Core
                     ClientId = eventMessage.ClientId
                 };
 
-                var channels = notificationEvent.NotificationEventChannels.Select(x => x.NotificationChannel.Name).ToList();
+                var channels = notificationEvent.NotificationEventChannels.Select(x => x.NotificationChannel.Type).ToList();
                 var clientTypes = notificationEvent.NotificationsEventClientTypes.Select(x => x.ClientType.Name);
                 var users = await _unitOfWork.LoginRepository.GetByClientIdAsync(eventMessage.ClientId, clientTypes);
                 var tasks = _notificationManagers
-                    .Where(x => x.Type == "Database" || channels.Contains(x.Type))
+                    .Where(x => channels.Contains(x.ChannelType))
                     .Select(x => x.Send(new List<NotificationModel> { message }, users.Select(x => x.Username)));
 
                 await Task.WhenAll(tasks);

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NotificationCenter.EventBroker.Events;
+using System;
 
 namespace NotificationCenter.Core.Events
 {
@@ -11,7 +12,7 @@ namespace NotificationCenter.Core.Events
         public int SerialNumber { get; set; }
 
         public CertificateExpirationEvent()
-            : base("CertificateExpiration")
+            : base(EventTypes.CertificateExpiration)
         {
 
         }

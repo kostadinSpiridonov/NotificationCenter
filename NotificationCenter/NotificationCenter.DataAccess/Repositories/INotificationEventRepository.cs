@@ -6,6 +6,6 @@ namespace NotificationCenter.DataAccess.Repositories
 {
     public interface INotificationEventRepository
     {
-        Task<IEnumerable<NotificationEvent>> GetAllByType(string type);
+        Task<IEnumerable<NotificationEvent>> GetAllByType(NotificationCrieriaType type);
     }
 }

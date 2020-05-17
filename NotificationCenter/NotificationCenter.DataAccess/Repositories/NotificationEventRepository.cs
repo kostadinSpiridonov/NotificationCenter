@@ -15,7 +15,7 @@ namespace NotificationCenter.DataAccess.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<NotificationEvent>> GetAllByType(string type)
+        public async Task<IEnumerable<NotificationEvent>> GetAllByType(NotificationCrieriaType type)
         {
             return await _context.NotificationEvents
                 .Include(x => x.NotificationEventChannels)
@@ -23,7 +23,7 @@ namespace NotificationCenter.DataAccess.Repositories
                 .Include(x => x.Criteria)
                 .Include(x => x.NotificationsEventClientTypes)
                     .ThenInclude(x => x.ClientType)
-                .Where(x => x.Criteria.Name == type)
+                .Where(x => x.Criteria.Name == type.ToString())
                 .ToListAsync();
         }
     }

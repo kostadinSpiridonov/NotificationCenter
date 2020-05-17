@@ -1,4 +1,5 @@
 ﻿using NotificationCenter.Core.Models;
+using NotificationCenter.DataAccess.Entities;
 using NotificationCenter.SignalR;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,8 @@ namespace NotificationCenter.Core.Managers
 {
     public class WebManager : INotificationManager
     {
-        public string Type { get; set; } = "Web";
+        public ChannelType ChannelType { get; } = ChannelType.Web;
+
         private readonly ISignalRNotificationService _notificationHub;
 
         public WebManager(ISignalRNotificationService notificationHub)
