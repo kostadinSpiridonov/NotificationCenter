@@ -1,5 +1,4 @@
-﻿using NotificationCenter.DataAccess.Entities;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace NotificationCenter.Core.Models
 {

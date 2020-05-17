@@ -17,11 +17,11 @@ namespace NotificationCenter.Core
 
         private void Handle(object sender, BaseEvent e)
         {
-            var eventProcessor = _serviceProvider.GetService<INotificationProcessor>();
-            eventProcessor.ProcessAsync(e);
+            INotificationProcessor notificationProcessor = _serviceProvider.GetService<INotificationProcessor>();
+            notificationProcessor.ProcessAsync(e);
         }
 
-        public void Clear(IServiceProvider serviceProvider)
+        public void Setup(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
             _eventBroker.EventHandler += Handle;

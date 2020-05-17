@@ -5,6 +5,6 @@ namespace NotificationCenter.Core
 {
     public interface INotificationProcessor
     {
-        Task ProcessAsync(BaseEvent eventMessage);
+        Task ProcessAsync(BaseEvent baseEvent);
     }
 }

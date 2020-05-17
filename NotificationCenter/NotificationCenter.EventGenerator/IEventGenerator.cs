@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace NotificationCenter.EventGenerator
 {
-    public interface INotificationGenerator
+    public interface IEventGenerator
     {
         Task<IEnumerable<CertificateExpirationEvent>> GenerateAsync();
     }

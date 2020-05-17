@@ -7,8 +7,8 @@ namespace NotificationCenter.EventGenerator.Configuration
     {
         public static IServiceCollection AddEventGenerator(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddHostedService<NotificatioHostedService>();
-            services.AddTransient<INotificationGenerator, CertificateNotificationGenerator>();
+            services.AddHostedService<EventHostedService>();
+            services.AddTransient<IEventGenerator, CertificateEventGenerator>();
 
             return services;
         }

@@ -15,6 +15,8 @@ namespace NotificationCenter.DataAccess
 
         public ILoginRepository LoginRepository { get; private set; }
 
+        public IClientRepository ClientRepository { get; private set; }
+
         private readonly ExtendedNotificationCenterContext _databaseContext;
 
         public UnitOfWork(ExtendedNotificationCenterContext databaseContext)
@@ -24,6 +26,7 @@ namespace NotificationCenter.DataAccess
             RequestRepository = new RequestRepository(databaseContext);
             NotificationEventRepository = new NotificationEventRepository(databaseContext);
             LoginRepository = new LoginRepository(databaseContext);
+            ClientRepository = new ClientRepository(databaseContext);
 
             _databaseContext = databaseContext;
         }

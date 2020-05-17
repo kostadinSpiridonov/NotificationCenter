@@ -20,7 +20,7 @@ namespace NotificationCenter.Core.Managers
         public async Task SendAsync(IEnumerable<NotificationModel> notifications)
         {
             // TODO: Use automapper
-            var mappedNotifications = notifications.Select(x => new SignalRNotification()
+            var mappedNotifications = notifications.Select(x => new SignalRNotification
             {
                 Content = x.Content,
                 Usernames = x.Usernames

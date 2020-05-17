@@ -44,9 +44,7 @@ namespace NotificationCenter.Web
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, INotificationEventHandler notificationEventHandler)
         {
-            //TODO
-            notificationEventHandler.Clear(app.ApplicationServices);
-
+            notificationEventHandler.Setup(app.ApplicationServices);
 
             if (env.IsDevelopment())
             {

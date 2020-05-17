@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace NotificationCenter.EventBroker
 {
-    public class EventBroker : IEventBroker
+    internal class EventBroker : IEventBroker
     {
         public event EventHandler<BaseEvent> EventHandler;
 

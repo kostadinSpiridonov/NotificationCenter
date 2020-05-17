@@ -6,11 +6,11 @@ using NotificationCenter.DataAccess;
 
 namespace NotificationCenter.EventGenerator
 {
-    internal class CertificateNotificationGenerator : INotificationGenerator
+    internal class CertificateEventGenerator : IEventGenerator
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        public CertificateNotificationGenerator(IUnitOfWork unitOfWork)
+        public CertificateEventGenerator(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }

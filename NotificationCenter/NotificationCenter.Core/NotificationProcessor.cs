@@ -19,15 +19,15 @@ namespace NotificationCenter.Core
             _unitOfWork = unitOfWork;
         }
 
-        public async Task ProcessAsync(BaseEvent eventMessage)
+        public async Task ProcessAsync(BaseEvent baseEvent)
         {
+            Client client = await _unitOfWork.ClientRepository.GetById(baseEvent.ClientId);
+
             IEnumerable<NotificationEvent> notificationEvents = await _unitOfWork.NotificationEventRepository
-                .GetAllByTypeAsync((NotificationCrieriaType)eventMessage.Type);
+                .GetAllByTypeAsync((NotificationCrieriaType)baseEvent.Type, client.ClientTypeId);
 
-            var notifications = notificationEvents
-                .Select(async x => await BuildNotificationAsync(eventMessage, x))
-                .Select(x => x.Result);
-
+            IEnumerable<NotificationModel> notifications = notificationEvents
+                .Select(x => BuildNotificationAsync(client, baseEvent, x));
 
             foreach (var notificationManager in _notificationManagers)
             {
@@ -36,22 +36,16 @@ namespace NotificationCenter.Core
             }
         }
 
-        private async Task<NotificationModel> BuildNotificationAsync(BaseEvent baseEvent, NotificationEvent notificationEvent)
+        private NotificationModel BuildNotificationAsync(Client client, BaseEvent baseEvent, NotificationEvent notificationEvent)
         {
-            var channels = notificationEvent.NotificationEventChannels
+            IEnumerable<NotificationChannelTypeModel> channels = notificationEvent.NotificationEventChannels
                    .Select(x => (NotificationChannelTypeModel)x.NotificationChannel.Type);
-
-            var clientTypes = notificationEvent.NotificationsEventClientTypes
-                .Select(x => x.ClientType.Name);
-
-            var users = await _unitOfWork.LoginRepository.GetByClientIdAsync(baseEvent.ClientId, clientTypes);
-
 
             return new NotificationModel
             {
                 Content = BuildNotifiationContent(notificationEvent, baseEvent),
                 ClientId = baseEvent.ClientId,
-                Usernames = users.Select(x => x.Username),
+                Usernames = client.Logins.Select(x => x.Username),
                 Channels = channels
             };
         }

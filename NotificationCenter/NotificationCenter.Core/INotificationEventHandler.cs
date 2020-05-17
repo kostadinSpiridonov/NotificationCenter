@@ -1,10 +1,9 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System;
+﻿using System;
 
 namespace NotificationCenter.Core
 {
     public interface INotificationEventHandler
     {
-        void Clear(IServiceProvider serviceProvider);
+        void Setup(IServiceProvider serviceProvider);
     }
 }

@@ -13,10 +13,5 @@ namespace NotificationCenter.Core.Events
         {
 
         }
-
-        public override string ToString()
-        {
-            return $"Status = {RequestStatus}, {RequestType}";
-        }
     }
 }

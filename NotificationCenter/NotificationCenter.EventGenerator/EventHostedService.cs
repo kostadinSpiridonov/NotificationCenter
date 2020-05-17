@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Hosting;
+using NotificationCenter.Core.Events;
 using NotificationCenter.EventBroker;
 using System;
 using System.Collections.Generic;
@@ -7,19 +8,19 @@ using System.Threading.Tasks;
 
 namespace NotificationCenter.EventGenerator
 {
-    public class NotificatioHostedService : IHostedService, IDisposable
+    public class EventHostedService : IHostedService, IDisposable
     {
-        private readonly IEnumerable<INotificationGenerator> _notificationGenerators;
-        private readonly IEventBroker _notificationEventBroker;
+        private readonly IEnumerable<IEventGenerator> _eventGenerators;
+        private readonly IEventBroker _eventBroker;
 
         private Timer _timer;
 
-        public NotificatioHostedService(
-            IEventBroker notificationEventBroker,
-            IEnumerable<INotificationGenerator> notificationGenerators)
+        public EventHostedService(
+            IEventBroker eventBroker,
+            IEnumerable<IEventGenerator> eventGenerators)
         {
-            _notificationEventBroker = notificationEventBroker;
-            _notificationGenerators = notificationGenerators;
+            _eventBroker = eventBroker;
+            _eventGenerators = eventGenerators;
         }
 
         public Task StartAsync(CancellationToken stoppingToken)
@@ -37,10 +38,10 @@ namespace NotificationCenter.EventGenerator
         {
             try
             {
-                foreach (var generator in _notificationGenerators)
+                foreach (var generator in _eventGenerators)
                 {
-                    IEnumerable<Core.Events.CertificateExpirationEvent> messages = await generator.GenerateAsync();
-                    //_notificationEventBroker.OnEventsOccured(messages);
+                    IEnumerable<CertificateExpirationEvent> events = await generator.GenerateAsync();
+                    _eventBroker.EventsOccured(events);
                 }
             }
             catch (Exception e)

@@ -21,10 +21,5 @@ namespace NotificationCenter.DataAccess.Repositories
                 x.Username == username && 
                 x.Password == passwordHash);
         }
-
-        public async Task<IEnumerable<Login>> GetByClientIdAsync(int clientId, IEnumerable<string> clientTypes)
-        {
-            return await _context.Logins.Where(x => x.ClientId == clientId && clientTypes.Contains(x.Client.ClientType.Name)).ToListAsync();
-        }
     }
 }
