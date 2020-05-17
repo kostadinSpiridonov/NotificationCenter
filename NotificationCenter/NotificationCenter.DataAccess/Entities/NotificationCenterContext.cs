@@ -1,25 +1,16 @@
-﻿using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using NotificationCenter.Core.Events;
-using NotificationCenter.EventBroker;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace NotificationCenter.DataAccess.Entities
 {
     public partial class NotificationCenterContext : DbContext
     {
-        private readonly IEventBroker _notificationEventBroker;
-
-        public NotificationCenterContext(IEventBroker notificationEventBroker)
+        public NotificationCenterContext()
         {
-            _notificationEventBroker = notificationEventBroker;
         }
 
-        public NotificationCenterContext(DbContextOptions<NotificationCenterContext> options, IEventBroker notificationEventBroker)
+        public NotificationCenterContext(DbContextOptions<NotificationCenterContext> options)
             : base(options)
         {
-            _notificationEventBroker = notificationEventBroker;
         }
 
         public virtual DbSet<Certificate> Certificates { get; set; }
@@ -43,26 +34,6 @@ namespace NotificationCenter.DataAccess.Entities
             }
         }
 
-        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-        {
-            foreach (var dbEntityEntry in ChangeTracker.Entries().Where(x => x.State == EntityState.Modified))
-            {
-                if (dbEntityEntry.Entity is Request r)
-                {
-                    if (dbEntityEntry.CurrentValues[nameof(Request.Status)] != dbEntityEntry.OriginalValues[nameof(Request.Status)])
-                    {
-                        _notificationEventBroker.OnEventOccured(new RequestStatusChangeEvent
-                        {
-                            ClientId = r.ClientId,
-                            RequestStatus = r.Status,
-                            RequestType = r.Type
-                        });
-                    }
-                }
-            }
-
-            return base.SaveChangesAsync(cancellationToken);
-        }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Certificate>(entity =>

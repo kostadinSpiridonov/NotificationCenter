@@ -9,9 +9,9 @@ namespace NotificationCenter.DataAccess.Repositories
 {
     internal class NotificationRepository : INotificationRepository
     {
-        private readonly NotificationCenterContext _context;
+        private readonly ExtendedNotificationCenterContext _context;
 
-        public NotificationRepository(NotificationCenterContext context)
+        public NotificationRepository(ExtendedNotificationCenterContext context)
         {
             _context = context;
         }

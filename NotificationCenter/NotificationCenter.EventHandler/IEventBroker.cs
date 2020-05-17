@@ -8,8 +8,8 @@ namespace NotificationCenter.EventBroker
     {
         event EventHandler<BaseEvent> EventHandler;
 
-        void OnEventOccured(BaseEvent e);
+        void EventOccured(BaseEvent e);
 
-        void OnEventsOccured(IEnumerable<BaseEvent> events);
+        void EventsOccured(IEnumerable<BaseEvent> events);
     }
 }

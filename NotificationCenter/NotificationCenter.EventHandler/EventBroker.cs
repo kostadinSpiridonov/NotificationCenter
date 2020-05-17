@@ -8,16 +8,16 @@ namespace NotificationCenter.EventBroker
     {
         public event EventHandler<BaseEvent> EventHandler;
 
-        public void OnEventOccured(BaseEvent e)
+        public void EventOccured(BaseEvent e)
         {
             EventHandler?.Invoke(this, e);
         }
 
-        public void OnEventsOccured(IEnumerable<BaseEvent> events)
+        public void EventsOccured(IEnumerable<BaseEvent> events)
         {
             foreach (var e in events)
             {
-                OnEventOccured(e);
+                EventOccured(e);
             }
         }
     }

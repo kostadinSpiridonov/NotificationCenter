@@ -40,7 +40,7 @@ namespace NotificationCenter.EventGenerator
                 foreach (var generator in _notificationGenerators)
                 {
                     IEnumerable<Core.Events.CertificateExpirationEvent> messages = await generator.Generate();
-                    _notificationEventBroker.OnEventsOccured(messages);
+                    //_notificationEventBroker.OnEventsOccured(messages);
                 }
             }
             catch (Exception e)

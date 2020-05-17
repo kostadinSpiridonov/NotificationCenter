@@ -1,10 +1,9 @@
-﻿using NotificationCenter.DataAccess.Entities;
-using NotificationCenter.DataAccess.Repositories;
+﻿using NotificationCenter.DataAccess.Repositories;
 using System.Threading.Tasks;
 
 namespace NotificationCenter.DataAccess
 {
-    public class UnitOfWork : IUnitOfWork
+    internal class UnitOfWork : IUnitOfWork
     {
         public INotificationRepository NotificationRepository { get; private set; }
 
@@ -16,9 +15,9 @@ namespace NotificationCenter.DataAccess
 
         public ILoginRepository LoginRepository { get; private set; }
 
-        private readonly NotificationCenterContext _databaseContext;
+        private readonly ExtendedNotificationCenterContext _databaseContext;
 
-        public UnitOfWork(NotificationCenterContext databaseContext)
+        public UnitOfWork(ExtendedNotificationCenterContext databaseContext)
         {
             NotificationRepository = new NotificationRepository(databaseContext);
             CertificateRespoitory = new CertificateRepository(databaseContext);

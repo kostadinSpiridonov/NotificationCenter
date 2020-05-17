@@ -9,9 +9,9 @@ namespace NotificationCenter.DataAccess.Repositories
 {
     internal class CertificateRepository : ICertificateRepository
     {
-        private readonly NotificationCenterContext _context;
+        private readonly ExtendedNotificationCenterContext _context;
 
-        public CertificateRepository(NotificationCenterContext context)
+        public CertificateRepository(ExtendedNotificationCenterContext context)
         {
             _context = context;
         }

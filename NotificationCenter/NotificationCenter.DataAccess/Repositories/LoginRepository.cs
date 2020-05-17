@@ -8,9 +8,9 @@ namespace NotificationCenter.DataAccess.Repositories
 {
     internal class LoginRepository : ILoginRepository
     {
-        private readonly NotificationCenterContext _context;
+        private readonly ExtendedNotificationCenterContext _context;
 
-        public LoginRepository(NotificationCenterContext context)
+        public LoginRepository(ExtendedNotificationCenterContext context)
         {
             _context = context;
         }

@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace NotificationCenter.DataAccess.Repositories
 {
-    public class NotificationEventRepository : INotificationEventRepository
+    internal class NotificationEventRepository : INotificationEventRepository
     {
-        private readonly NotificationCenterContext _context;
+        private readonly ExtendedNotificationCenterContext _context;
 
-        public NotificationEventRepository(NotificationCenterContext context)
+        public NotificationEventRepository(ExtendedNotificationCenterContext context)
         {
             _context = context;
         }

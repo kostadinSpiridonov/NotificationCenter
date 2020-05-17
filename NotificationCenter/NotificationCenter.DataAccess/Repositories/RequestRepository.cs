@@ -7,9 +7,9 @@ namespace NotificationCenter.DataAccess.Repositories
 {
     internal class RequestRepository : IRequestRepository
     {
-        private readonly NotificationCenterContext _context;
+        private readonly ExtendedNotificationCenterContext _context;
 
-        public RequestRepository(NotificationCenterContext context)
+        public RequestRepository(ExtendedNotificationCenterContext context)
         {
             _context = context;
         }
