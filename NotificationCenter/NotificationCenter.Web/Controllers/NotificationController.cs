@@ -1,43 +1,31 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using NotificationCenter.DataAccess;
-using NotificationCenter.DataAccess.Repositories;
-using NotificationCenter.Web.Models;
-using System.Linq;
-using System.Security.Claims;
+using NotificationCenter.Web.Services;
+using NotificationCenter.Web.Services.Auth;
 using System.Threading.Tasks;
 
 namespace NotificationCenter.Web.Controllers
 {
     public class NotificationController : Controller
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly INotificationService _notificationService;
 
-        public NotificationController(IUnitOfWork unitOfWork)
+        public NotificationController(INotificationService notificationService)
         {
-            _unitOfWork = unitOfWork;
+            _notificationService = notificationService;
         }
 
         public async Task<IActionResult> Index()
         {
-            int clientId = int.Parse(User.Claims.Where(c => c.Type == ClaimTypes.Role)
-                   .Select(c => c.Value).SingleOrDefault());
-            var notifications = await _unitOfWork.NotificationRepository.GetByClientId(clientId);
-            var mapped = notifications.Select(x => new NotificationModel
-            {
-                Name = x.Content
-            });
+            int clientId = User.GetClientId();
+            var notifications = await _notificationService.GetAllAsync(clientId);
 
-            return View(mapped);
+            return View(notifications);
         }
 
         [HttpPost]
-        public async Task<IActionResult> SimulateUpdate()
+        public async Task<IActionResult> SimulateRequestUpdate()
         {
-            var notifications = await _unitOfWork.RequestRepository.GetAll();
-            var first = notifications.First();
-            first.Status = "change";
-            await _unitOfWork.RequestRepository.Update(first);
-            await _unitOfWork.Commit();
+            await _notificationService.SimulateRequestUpdateAsync();
             return RedirectToAction("Index", "Home");
         }
     }

@@ -15,7 +15,7 @@ namespace NotificationCenter.Core
         public IEnumerable<INotificationManager> _notificationManagers;
         public IUnitOfWork _unitOfWork;
 
-        public NotificationProcessor(IUnitOfWork unitOfWork, INotificationService notificationHub)
+        public NotificationProcessor(IUnitOfWork unitOfWork, ISignalRNotificationService notificationHub)
         {
             _unitOfWork = unitOfWork;
             _notificationManagers = new List<INotificationManager>
@@ -40,7 +40,7 @@ namespace NotificationCenter.Core
 
                 var channels = notificationEvent.NotificationEventChannels.Select(x => x.NotificationChannel.Name).ToList();
                 var clientTypes = notificationEvent.NotificationsEventClientTypes.Select(x => x.ClientType.Name);
-                var users = await _unitOfWork.LoginRepository.GetByClientId(eventMessage.ClientId, clientTypes);
+                var users = await _unitOfWork.LoginRepository.GetByClientIdAsync(eventMessage.ClientId, clientTypes);
                 var tasks = _notificationManagers
                     .Where(x => x.Type == "Database" || channels.Contains(x.Type))
                     .Select(x => x.Send(new List<NotificationModel> { message }, users.Select(x => x.Username)));

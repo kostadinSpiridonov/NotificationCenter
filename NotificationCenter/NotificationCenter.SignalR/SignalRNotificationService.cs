@@ -4,18 +4,18 @@ using System.Threading.Tasks;
 
 namespace NotificationCenter.SignalR
 {
-    public class NotificationService : INotificationService
+    internal class SignalRNotificationService : ISignalRNotificationService
     {
         private readonly IHubContext<NotificationHub> _hub;
 
-        public NotificationService(IHubContext<NotificationHub> hub)
+        public SignalRNotificationService(IHubContext<NotificationHub> hub)
         {
             _hub = hub;
         }
 
         public Task SendNotificationAsync(SignalRNotification message, IReadOnlyList<string> usernames)
         {
-            return _hub.Clients.Users(usernames).SendAsync("ReceiveMessage", message.Content);
+            return _hub.Clients.Users(usernames).SendAsync("ReceiveNotification", message.Content);
         }
     }
 }

@@ -7,8 +7,7 @@ namespace NotificationCenter.SignalR.Configuration
     {
         public static IServiceCollection AddWebSignalR(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddTransient<INotificationHub, NotificationHub>();
-            services.AddTransient<INotificationService, NotificationService>();
+            services.AddTransient<ISignalRNotificationService, SignalRNotificationService>();
 
             return services;
         }

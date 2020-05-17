@@ -2,7 +2,7 @@
 
 namespace NotificationCenter.Web.Models
 {
-    public class LoginModel
+    public class LoginViewModel
     {
         [Required]
         public string Username { get; set; }

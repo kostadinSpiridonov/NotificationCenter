@@ -1,25 +1,17 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Cryptography.KeyDerivation;
-using Microsoft.AspNetCore.Mvc;
-using NotificationCenter.DataAccess.Repositories;
+﻿using Microsoft.AspNetCore.Mvc;
 using NotificationCenter.Web.Models;
-using SimpleCrypto;
-using System;
-using System.Collections.Generic;
-using System.Security.Claims;
-using System.Security.Cryptography;
+using NotificationCenter.Web.Services;
 using System.Threading.Tasks;
 
 namespace NotificationCenter.Web.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly ILoginRepository _loginRepository;
+        private readonly IAccountService _accountService;
 
-        public AccountController(ILoginRepository loginRepository)
+        public AccountController(IAccountService accountService)
         {
-            _loginRepository = loginRepository;
+            _accountService = accountService;
         }
 
         public IActionResult Login()
@@ -28,49 +20,22 @@ namespace NotificationCenter.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginModel model)
+        public async Task<IActionResult> Login(LoginViewModel model)
         {
-            string hashed = HashPassword(model.Password);
-
-            //if (!await _loginRepository.Exist(model.Username, hashed))
-            //{
-            //    return View();
-            //}
-            var claims = new List<Claim>
+            if (await _accountService.LogInAsync(HttpContext, model))
             {
-                new Claim(ClaimTypes.Name, model.Username),
-                new Claim(ClaimTypes.NameIdentifier, model.Username),
-                new Claim(ClaimTypes.Role, "1")
+                return RedirectToAction("Index", "Home");
+            }
 
-            };
-
-            var claimsIdentity = new ClaimsIdentity(
-                claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
-            var authProperties = new AuthenticationProperties
-            {
-                ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(60),
-            };
-
-            await HttpContext.SignInAsync(
-                CookieAuthenticationDefaults.AuthenticationScheme,
-                new ClaimsPrincipal(claimsIdentity),
-                authProperties);
-
-            return RedirectToAction("Index", "Home");
+            ModelState.AddModelError(string.Empty, "Invalid password or username.");
+            return View(model);
         }
-        public string HashPassword(string password)
-        {
-            ICryptoService cryptoService = new PBKDF2();
-            var salt = "100000.i7BB2tLt5UeYA9qDTRySyFjIJGgEZTDAFfesZeEr2mJqxA==";
-            string hashed = cryptoService.Compute(password, salt);
-            return hashed;
-        }
+
 
         [HttpPost]
         public async Task<IActionResult> LogOut()
         {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            await _accountService.LogOutAsync(HttpContext);
             return RedirectToAction("Index", "Home");
         }
     }

@@ -6,8 +6,8 @@ namespace NotificationCenter.DataAccess.Repositories
 {
     public interface ILoginRepository
     {
-        Task<bool> Exist(string username, string passwordHash);
+        Task<Login> GetAsync(string username, string passwordHash);
 
-        Task<IEnumerable<Login>> GetByClientId(int clientId, IEnumerable<string> clientTypes);
+        Task<IEnumerable<Login>> GetByClientIdAsync(int clientId, IEnumerable<string> clientTypes);
     }
 }

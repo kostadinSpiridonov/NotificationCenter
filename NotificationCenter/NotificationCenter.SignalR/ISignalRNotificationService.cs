@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace NotificationCenter.SignalR
 {
-    public interface INotificationService
+    public interface ISignalRNotificationService
     {
         Task SendNotificationAsync(SignalRNotification message, IReadOnlyList<string> usernames);
     }

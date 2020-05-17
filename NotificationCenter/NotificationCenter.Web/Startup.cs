@@ -1,11 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -15,6 +11,7 @@ using NotificationCenter.DataAccess.Configuration;
 using NotificationCenter.EventGenerator;
 using NotificationCenter.SignalR;
 using NotificationCenter.SignalR.Configuration;
+using NotificationCenter.Web.Services;
 
 namespace NotificationCenter.Web
 {
@@ -27,31 +24,26 @@ namespace NotificationCenter.Web
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<CookiePolicyOptions>(options =>
             {
-                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                 options.CheckConsentNeeded = context => true;
             });
 
-            services.AddWebSignalR(Configuration);
             services.AddSignalR();
             services.AddControllersWithViews()
                 .AddNewtonsoftJson();
             services.AddRazorPages();
-            services.AddHostedService<NotificatioHostedService>();
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie();
-            services.AddDataAccess(Configuration);
-            services.AddCore(Configuration);
+
+            ConfigureAppServices(services);
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, INotificationEventHandler notificationEventHandler)
         {
-            app.UseMiddleware<ExceptionHandleMiddleware>();
+            //TODO
             notificationEventHandler.Clear(app.ApplicationServices);
 
 
@@ -62,7 +54,6 @@ namespace NotificationCenter.Web
             else
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
@@ -82,8 +73,27 @@ namespace NotificationCenter.Web
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
-                endpoints.MapHub<NotificationHub>("/notificationhub");
+
+                ConfigureHubs(endpoints);
             });
+        }
+
+        private void ConfigureAppServices(IServiceCollection services)
+        {
+            services.AddWebSignalR(Configuration);
+            services.AddDataAccess(Configuration);
+            services.AddCore(Configuration);
+
+            //TODO
+            services.AddHostedService<NotificatioHostedService>();
+
+            services.AddTransient<IAccountService, AccountService>();
+            services.AddTransient<INotificationService, NotificationService>();
+        }
+
+        private void ConfigureHubs(IEndpointRouteBuilder endpoints)
+        {
+            endpoints.MapHub<NotificationHub>("/notificationhub");
         }
     }
 }
