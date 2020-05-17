@@ -3,11 +3,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using NotificationCenter.Core.Events;
 using NotificationCenter.DataAccess;
-using NotificationCenter.EventBroker;
 
 namespace NotificationCenter.EventGenerator
 {
-    public class CertificateNotificationGenerator : INotificationGenerator
+    internal class CertificateNotificationGenerator : INotificationGenerator
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -21,14 +20,14 @@ namespace NotificationCenter.EventGenerator
             var expiredCertifiicates = await _unitOfWork.CertificateRespoitory.GetExpiredCertificates();
             await _unitOfWork.Commit();
 
-            return expiredCertifiicates.Select(x => new CertificateExpirationEvent()
+            //TODO: use automapper
+            return expiredCertifiicates.Select(x => new CertificateExpirationEvent
             {
                 SerialNumber = x.Id,
                 EndDate = x.EndDate,
                 StartDate = x.EndDate,
                 ClientId = x.ClientId
             });
-
         }
     }
 }

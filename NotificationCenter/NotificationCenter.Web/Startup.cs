@@ -9,6 +9,7 @@ using NotificationCenter.Core;
 using NotificationCenter.Core.Configuration;
 using NotificationCenter.DataAccess.Configuration;
 using NotificationCenter.EventGenerator;
+using NotificationCenter.EventGenerator.Configuration;
 using NotificationCenter.SignalR;
 using NotificationCenter.SignalR.Configuration;
 using NotificationCenter.Web.Services;
@@ -83,9 +84,8 @@ namespace NotificationCenter.Web
             services.AddWebSignalR(Configuration);
             services.AddDataAccess(Configuration);
             services.AddCore(Configuration);
+            services.AddEventGenerator(Configuration);
 
-            //TODO
-            services.AddHostedService<NotificatioHostedService>();
 
             services.AddTransient<IAccountService, AccountService>();
             services.AddTransient<INotificationService, NotificationService>();

@@ -1,5 +1,6 @@
 ﻿using NotificationCenter.Core.Events;
 using System;
+using System.Collections.Generic;
 
 namespace NotificationCenter.EventBroker
 {
@@ -8,5 +9,7 @@ namespace NotificationCenter.EventBroker
         event EventHandler<BaseEvent> EventHandler;
 
         void OnEventOccured(BaseEvent e);
+
+        void OnEventsOccured(IEnumerable<BaseEvent> events);
     }
 }

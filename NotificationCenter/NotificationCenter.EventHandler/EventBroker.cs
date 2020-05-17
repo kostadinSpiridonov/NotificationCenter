@@ -1,5 +1,6 @@
 ﻿using NotificationCenter.Core.Events;
 using System;
+using System.Collections.Generic;
 
 namespace NotificationCenter.EventBroker
 {
@@ -10,6 +11,14 @@ namespace NotificationCenter.EventBroker
         public void OnEventOccured(BaseEvent e)
         {
             EventHandler?.Invoke(this, e);
+        }
+
+        public void OnEventsOccured(IEnumerable<BaseEvent> events)
+        {
+            foreach (var e in events)
+            {
+                OnEventOccured(e);
+            }
         }
     }
 }

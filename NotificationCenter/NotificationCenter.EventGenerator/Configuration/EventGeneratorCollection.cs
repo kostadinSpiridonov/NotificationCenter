@@ -1,15 +1,14 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace NotificationCenter.EventGenerator.Configuration
 {
-      public static class EventGeneratorCollection
+    public static class EventGeneratorCollection
     {
-        public static IServiceCollection AddEventBroker(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddEventGenerator(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddHostedService<NotificatioHostedService>();
+            services.AddTransient<INotificationGenerator, CertificateNotificationGenerator>();
 
             return services;
         }
