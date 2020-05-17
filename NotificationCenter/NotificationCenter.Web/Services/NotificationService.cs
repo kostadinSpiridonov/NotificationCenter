@@ -18,7 +18,7 @@ namespace NotificationCenter.Web.Services
 
         public async Task<IEnumerable<NotificationViewModel>> GetAllAsync(int clientId)
         {
-            IEnumerable<Notification> notifications = await _unitOfWork.NotificationRepository.GetByClientId(clientId);
+            IEnumerable<Notification> notifications = await _unitOfWork.NotificationRepository.GetByClientIdAsync(clientId);
 
             // TODO: Use automapper
             return notifications.Select(x => new NotificationViewModel
@@ -33,9 +33,9 @@ namespace NotificationCenter.Web.Services
 
             Request firstNotification = notifications.First();
             firstNotification.Status = "change";
-            await _unitOfWork.RequestRepository.Update(firstNotification);
+            await _unitOfWork.RequestRepository.UpdateAsync(firstNotification);
 
-            await _unitOfWork.Commit();
+            await _unitOfWork.CommitAsync();
         }
     }
 }

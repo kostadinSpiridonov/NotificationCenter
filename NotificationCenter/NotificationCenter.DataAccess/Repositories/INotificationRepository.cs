@@ -6,8 +6,8 @@ namespace NotificationCenter.DataAccess.Repositories
 {
     public interface INotificationRepository
     {
-        Task Save(Notification notification);
+        Task SaveAsync(IEnumerable<Notification> notifications);
 
-        Task<IEnumerable<Notification>> GetByClientId(int clientId);
+        Task<IEnumerable<Notification>> GetByClientIdAsync(int clientId);
     }
 }

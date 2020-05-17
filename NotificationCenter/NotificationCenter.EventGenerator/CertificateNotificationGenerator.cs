@@ -15,10 +15,10 @@ namespace NotificationCenter.EventGenerator
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<IEnumerable<CertificateExpirationEvent>> Generate()
+        public async Task<IEnumerable<CertificateExpirationEvent>> GenerateAsync()
         {
-            var expiredCertifiicates = await _unitOfWork.CertificateRespoitory.GetExpiredCertificates();
-            await _unitOfWork.Commit();
+            var expiredCertifiicates = await _unitOfWork.CertificateRespoitory.GetExpiredCertificatesAsync();
+            await _unitOfWork.CommitAsync();
 
             //TODO: use automapper
             return expiredCertifiicates.Select(x => new CertificateExpirationEvent

@@ -2,7 +2,7 @@
 {
     public enum ChannelType
     {
-        Web,
-        Database
+        Web = 1,
+        Database = 2
     }
 }

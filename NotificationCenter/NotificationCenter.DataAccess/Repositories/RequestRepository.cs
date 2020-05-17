@@ -14,7 +14,7 @@ namespace NotificationCenter.DataAccess.Repositories
             _context = context;
         }
 
-        public Task Update(Request request)
+        public Task UpdateAsync(Request request)
         {
             return Task.FromResult(_context.Requests.Update(request));
         }

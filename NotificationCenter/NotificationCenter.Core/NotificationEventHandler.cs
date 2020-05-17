@@ -18,7 +18,7 @@ namespace NotificationCenter.Core
         private void Handle(object sender, BaseEvent e)
         {
             var eventProcessor = _serviceProvider.GetService<INotificationProcessor>();
-            eventProcessor.Process(e);
+            eventProcessor.ProcessAsync(e);
         }
 
         public void Clear(IServiceProvider serviceProvider)

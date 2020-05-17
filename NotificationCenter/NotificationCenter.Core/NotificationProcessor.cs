@@ -1,9 +1,7 @@
 ﻿using NotificationCenter.Core.Events;
-using NotificationCenter.Core.Managers;
 using NotificationCenter.Core.Models;
 using NotificationCenter.DataAccess;
 using NotificationCenter.DataAccess.Entities;
-using NotificationCenter.SignalR;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,41 +13,50 @@ namespace NotificationCenter.Core
         public IEnumerable<INotificationManager> _notificationManagers;
         public IUnitOfWork _unitOfWork;
 
-        public NotificationProcessor(IUnitOfWork unitOfWork, ISignalRNotificationService notificationHub)
+        public NotificationProcessor(IEnumerable<INotificationManager> notificationManagers, IUnitOfWork unitOfWork)
         {
+            _notificationManagers = notificationManagers;
             _unitOfWork = unitOfWork;
-            _notificationManagers = new List<INotificationManager>
-            {
-                new WebManager(notificationHub),
-                new DatabaseManager(_unitOfWork)
-            };
         }
 
-        public async Task Process(BaseEvent eventMessage)
+        public async Task ProcessAsync(BaseEvent eventMessage)
         {
-            var notificationEvents = await _unitOfWork.NotificationEventRepository.GetAllByType((NotificationCrieriaType)eventMessage.Type);
+            IEnumerable<NotificationEvent> notificationEvents = await _unitOfWork.NotificationEventRepository
+                .GetAllByTypeAsync((NotificationCrieriaType)eventMessage.Type);
+
+            var notifications = notificationEvents
+                .Select(async x => await BuildNotificationAsync(eventMessage, x))
+                .Select(x => x.Result);
 
 
-            foreach (var notificationEvent in notificationEvents)
+            foreach (var notificationManager in _notificationManagers)
             {
-                var message = new NotificationModel()
-                {
-                    Content = BuildMessage(notificationEvent, eventMessage),
-                    ClientId = eventMessage.ClientId
-                };
-
-                var channels = notificationEvent.NotificationEventChannels.Select(x => x.NotificationChannel.Type).ToList();
-                var clientTypes = notificationEvent.NotificationsEventClientTypes.Select(x => x.ClientType.Name);
-                var users = await _unitOfWork.LoginRepository.GetByClientIdAsync(eventMessage.ClientId, clientTypes);
-                var tasks = _notificationManagers
-                    .Where(x => channels.Contains(x.ChannelType))
-                    .Select(x => x.Send(new List<NotificationModel> { message }, users.Select(x => x.Username)));
-
-                await Task.WhenAll(tasks);
+                var channelNotifications = notifications.Where(x => x.Channels.Contains(notificationManager.ChannelType));
+                await notificationManager.SendAsync(channelNotifications);
             }
         }
 
-        private string BuildMessage(NotificationEvent notificationEvent, BaseEvent baseEvent)
+        private async Task<NotificationModel> BuildNotificationAsync(BaseEvent baseEvent, NotificationEvent notificationEvent)
+        {
+            var channels = notificationEvent.NotificationEventChannels
+                   .Select(x => (NotificationChannelTypeModel)x.NotificationChannel.Type);
+
+            var clientTypes = notificationEvent.NotificationsEventClientTypes
+                .Select(x => x.ClientType.Name);
+
+            var users = await _unitOfWork.LoginRepository.GetByClientIdAsync(baseEvent.ClientId, clientTypes);
+
+
+            return new NotificationModel
+            {
+                Content = BuildNotifiationContent(notificationEvent, baseEvent),
+                ClientId = baseEvent.ClientId,
+                Usernames = users.Select(x => x.Username),
+                Channels = channels
+            };
+        }
+
+        private string BuildNotifiationContent(NotificationEvent notificationEvent, BaseEvent baseEvent)
         {
             switch (baseEvent)
             {

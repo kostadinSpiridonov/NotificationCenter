@@ -16,7 +16,7 @@ namespace NotificationCenter.DataAccess.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Certificate>> GetExpiredCertificates()
+        public async Task<IEnumerable<Certificate>> GetExpiredCertificatesAsync()
         {
             var today = DateTime.Now.Date;
 

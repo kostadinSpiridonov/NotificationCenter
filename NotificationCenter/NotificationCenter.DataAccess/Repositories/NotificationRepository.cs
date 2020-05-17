@@ -16,12 +16,12 @@ namespace NotificationCenter.DataAccess.Repositories
             _context = context;
         }
 
-        public async Task Save(Notification notification)
+        public async Task SaveAsync(IEnumerable<Notification> notifications)
         {
-            await _context.Notifications.AddAsync(notification);
+            await _context.Notifications.AddRangeAsync(notifications);
         }
 
-        public async Task<IEnumerable<Notification>> GetByClientId(int clientId)
+        public async Task<IEnumerable<Notification>> GetByClientIdAsync(int clientId)
         {
             return await _context.Notifications.Where(x => x.ClientId == clientId).ToListAsync();
         }

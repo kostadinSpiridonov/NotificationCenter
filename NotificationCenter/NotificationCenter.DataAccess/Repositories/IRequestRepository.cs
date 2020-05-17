@@ -6,7 +6,7 @@ namespace NotificationCenter.DataAccess.Repositories
 {
     public interface IRequestRepository
     {
-        Task Update(Request request);
+        Task UpdateAsync(Request request);
 
         Task<IEnumerable<Request>> GetAll();
     }

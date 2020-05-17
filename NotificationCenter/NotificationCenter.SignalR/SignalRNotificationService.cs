@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace NotificationCenter.SignalR
@@ -13,9 +14,14 @@ namespace NotificationCenter.SignalR
             _hub = hub;
         }
 
-        public Task SendNotificationAsync(SignalRNotification message, IReadOnlyList<string> usernames)
+        public async Task SendNotificationAsync(IEnumerable<SignalRNotification> messages)
         {
-            return _hub.Clients.Users(usernames).SendAsync("ReceiveNotification", message.Content);
+            foreach (var message in messages)
+            {
+                await _hub.Clients
+                    .Users(message.Usernames.ToList())
+                    .SendAsync("ReceiveNotification", message.Content);
+            }
         }
     }
 }

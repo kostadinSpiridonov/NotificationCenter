@@ -6,6 +6,6 @@ namespace NotificationCenter.EventGenerator
 {
     public interface INotificationGenerator
     {
-        Task<IEnumerable<CertificateExpirationEvent>> Generate();
+        Task<IEnumerable<CertificateExpirationEvent>> GenerateAsync();
     }
 }

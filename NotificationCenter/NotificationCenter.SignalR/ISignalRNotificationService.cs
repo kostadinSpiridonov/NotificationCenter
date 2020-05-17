@@ -5,6 +5,6 @@ namespace NotificationCenter.SignalR
 {
     public interface ISignalRNotificationService
     {
-        Task SendNotificationAsync(SignalRNotification message, IReadOnlyList<string> usernames);
+        Task SendNotificationAsync(IEnumerable<SignalRNotification> messages);
     }
 }

@@ -15,8 +15,8 @@ namespace NotificationCenter.DataAccess
 
         ILoginRepository LoginRepository { get; }
 
-        Task Commit();
+        Task CommitAsync();
 
-        ValueTask Rollback();
+        ValueTask RollbackAsync();
     }
 }

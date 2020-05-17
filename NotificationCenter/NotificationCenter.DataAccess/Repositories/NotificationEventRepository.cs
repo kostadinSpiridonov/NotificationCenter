@@ -15,7 +15,7 @@ namespace NotificationCenter.DataAccess.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<NotificationEvent>> GetAllByType(NotificationCrieriaType type)
+        public async Task<IEnumerable<NotificationEvent>> GetAllByTypeAsync(NotificationCrieriaType type)
         {
             return await _context.NotificationEvents
                 .Include(x => x.NotificationEventChannels)

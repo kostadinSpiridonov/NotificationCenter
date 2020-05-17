@@ -6,6 +6,6 @@ namespace NotificationCenter.DataAccess.Repositories
 {
     public interface ICertificateRepository
     {
-        Task<IEnumerable<Certificate>> GetExpiredCertificates();
+        Task<IEnumerable<Certificate>> GetExpiredCertificatesAsync();
     }
 }

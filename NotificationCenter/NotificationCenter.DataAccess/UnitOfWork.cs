@@ -28,12 +28,12 @@ namespace NotificationCenter.DataAccess
             _databaseContext = databaseContext;
         }
 
-        public Task Commit()
+        public Task CommitAsync()
         {
             return _databaseContext.SaveChangesAsync();
         }
 
-        public ValueTask Rollback()
+        public ValueTask RollbackAsync()
         {
             return _databaseContext.DisposeAsync();
         }

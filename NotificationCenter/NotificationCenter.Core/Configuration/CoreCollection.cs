@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using NotificationCenter.SignalR.Configuration;
+using NotificationCenter.Core.Managers;
 
 namespace NotificationCenter.Core.Configuration
 {
@@ -10,6 +10,8 @@ namespace NotificationCenter.Core.Configuration
         {
             services.AddScoped<INotificationEventHandler, NotificationEventHandler>();
             services.AddTransient<INotificationProcessor, NotificationProcessor>();
+            services.AddTransient<INotificationManager, WebNotificationManager>();
+            services.AddTransient<INotificationManager, DatabaseNotificationManager>();
 
             return services;
         }

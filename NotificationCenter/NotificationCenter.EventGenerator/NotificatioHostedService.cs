@@ -39,7 +39,7 @@ namespace NotificationCenter.EventGenerator
             {
                 foreach (var generator in _notificationGenerators)
                 {
-                    IEnumerable<Core.Events.CertificateExpirationEvent> messages = await generator.Generate();
+                    IEnumerable<Core.Events.CertificateExpirationEvent> messages = await generator.GenerateAsync();
                     //_notificationEventBroker.OnEventsOccured(messages);
                 }
             }
